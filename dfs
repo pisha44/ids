@@ -35,3 +35,30 @@ def main():
 # Run the main function
 if __name__ == "__main__":
     main()
+#nonrec
+
+import pandas as pd
+from collections import defaultdict
+
+# Read the undirected graph from a CSV file
+df = pd.read_csv('graph_expt1.csv')
+ # file should have columns: from, to
+
+# Build the adjacency list
+graph = defaultdict(list)
+for index, row in df.iterrows():
+    graph[row['from']].append(row['to'])
+    graph[row['to']].append(row['from'])  # because it's undirected
+
+# Recursive DFS function
+def dfs_recursive(node, visited):
+    if node not in visited:
+        print(node, end=' ')
+        visited.add(node)
+        for neighbor in graph[node]:
+            dfs_recursive(neighbor, visited)
+
+# Run DFS from a start node
+start_node = input("Enter the start node: ")
+print("DFS Traversal (Recursive):")
+dfs_recursive(start_node, set())
