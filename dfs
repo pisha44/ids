@@ -1,0 +1,37 @@
+#Recursive
+import csv
+
+# Function to read the graph from the CSV file
+def read_graph_from_csv(file_path):
+    graph = {}
+    with open(file_path, mode='r') as file:
+        reader = csv.reader(file)
+        for row in reader:
+            node = int(row[0])  # The node
+            neighbors = list(map(int, row[1].split(',')))  # List of neighbors
+            graph[node] = neighbors
+    return graph
+
+# Recursive DFS function
+def dfs_recursive(graph, node, visited):
+    print(node, end=' ')  # Visit the node
+    visited[node] = True  # Mark the node as visited
+    for neighbor in graph[node]:  # Explore each neighbor
+        if not visited[neighbor]:
+            dfs_recursive(graph, neighbor, visited)
+
+# Main function to initiate DFS
+def main():
+    # Replace 'your_graph.csv' with the path to your CSV file
+    graph = read_graph_from_csv('your_graph.csv')  
+    
+    visited = {node: False for node in graph}  # Initialize all nodes as unvisited
+    
+    # Start DFS from the first node (you can change the starting node)
+    starting_node = 0  # Adjust as needed
+    print("DFS Recursive Traversal:")
+    dfs_recursive(graph, starting_node, visited)
+
+# Run the main function
+if __name__ == "__main__":
+    main()
