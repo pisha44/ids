@@ -1,0 +1,139 @@
+
+#fuzzzy 1 Implement Fuzzy Set Operations (Union, Intersection, Complement) with 3 Fuzzy Sets
+python
+Copy
+Edit
+
+# --- Fuzzy Set Operations with 3 sets ---
+
+# Define 3 fuzzy sets
+A = {'x1': 0.2, 'x2': 0.7, 'x3': 0.5}
+B = {'x1': 0.6, 'x2': 0.4, 'x3': 0.8}
+C = {'x1': 0.3, 'x2': 0.9, 'x3': 0.6}
+
+# Union: max(A(x), B(x), C(x))
+def union(*sets):
+    result = {}
+    elements = set().union(*sets)
+    for elem in elements:
+        result[elem] = max(set_.get(elem, 0) for set_ in sets)
+    return result
+
+# Intersection: min(A(x), B(x), C(x))
+def intersection(*sets):
+    result = {}
+    elements = set().union(*sets)
+    for elem in elements:
+        result[elem] = min(set_.get(elem, 0) for set_ in sets)
+    return result
+
+# Complement: 1 - A(x)
+def complement(set_):
+    return {elem: 1 - value for elem, value in set_.items()}
+
+# Perform operations
+union_result = union(A, B, C)
+intersection_result = intersection(A, B, C)
+complement_A = complement(A)
+complement_B = complement(B)
+complement_C = complement(C)
+
+# Display results
+print("Fuzzy Set A:", A)
+print("Fuzzy Set B:", B)
+print("Fuzzy Set C:", C)
+print("\nUnion (A ∪ B ∪ C):", union_result)
+print("Intersection (A ∩ B ∩ C):", intersection_result)
+print("Complement of A:", complement_A)
+print("Complement of B:", complement_B)
+print("Complement of C:", complement_C)
+
+# --- Fuzzy Set Operations Functions De Morgan’s Law (Complement of Union) — 2 Sets
+
+def union(A, B):
+    result = {}
+    elements = set(A.keys()).union(B.keys())
+    for elem in elements:
+        result[elem] = max(A.get(elem, 0), B.get(elem, 0))
+    return result
+
+def intersection(A, B):
+    result = {}
+    elements = set(A.keys()).union(B.keys())
+    for elem in elements:
+        result[elem] = min(A.get(elem, 0), B.get(elem, 0))
+    return result
+
+def complement(set_):
+    return {elem: 1 - value for elem, value in set_.items()}
+
+# --- Main Program ---
+
+print("\n--- De Morgan's Law: (Complement of Union) ---")
+
+# Define 2 fuzzy sets
+A = {'x1': 0.4, 'x2': 0.8, 'x3': 0.3}
+B = {'x1': 0.6, 'x2': 0.5, 'x3': 0.7}
+
+# (A ∪ B)'
+comp_union = complement(union(A, B))
+
+# A' ∩ B'
+comp_A = complement(A)
+comp_B = complement(B)
+intersection_of_complements = intersection(comp_A, comp_B)
+
+# Display
+print("Fuzzy Set A:", A)
+print("Fuzzy Set B:", B)
+print("\n(A ∪ B)' :", comp_union)
+print("A' ∩ B' :", intersection_of_complements)
+
+# Verify De Morgan’s Law
+print("\nDe Morgan's Law (Complement of Union) holds?", comp_union == intersection_of_complements)
+
+
+#De Morgan’s Law (Complement of Intersection) — 2 Sets
+# --- Fuzzy Set Operations Functions ---
+
+def union(A, B):
+    result = {}
+    elements = set(A.keys()).union(B.keys())
+    for elem in elements:
+        result[elem] = max(A.get(elem, 0), B.get(elem, 0))
+    return result
+
+def intersection(A, B):
+    result = {}
+    elements = set(A.keys()).union(B.keys())
+    for elem in elements:
+        result[elem] = min(A.get(elem, 0), B.get(elem, 0))
+    return result
+
+def complement(set_):
+    return {elem: 1 - value for elem, value in set_.items()}
+
+# --- Main Program ---
+
+print("\n--- De Morgan's Law: (Complement of Intersection) ---")
+
+# Define 2 fuzzy sets
+A = {'x1': 0.5, 'x2': 0.2, 'x3': 0.9}
+B = {'x1': 0.7, 'x2': 0.3, 'x3': 0.4}
+
+# (A ∩ B)'
+comp_intersection = complement(intersection(A, B))
+
+# A' ∪ B'
+comp_A = complement(A)
+comp_B = complement(B)
+union_of_complements = union(comp_A, comp_B)
+
+# Display
+print("Fuzzy Set A:", A)
+print("Fuzzy Set B:", B)
+print("\n(A ∩ B)' :", comp_intersection)
+print("A' ∪ B' :", union_of_complements)
+
+# Verify De Morgan’s Law
+print("\nDe Morgan's Law (Complement of Intersection) holds?", comp_intersection == union_of_complements)
