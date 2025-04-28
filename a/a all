@@ -1,0 +1,264 @@
+#A* for Directed Weighted Graph from .csv file 
+import csv
+import heapq
+from collections import defaultdict
+
+def read_graph(file_path):
+    graph = defaultdict(list)
+    with open(file_path, 'r') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            src = row['source']
+            dest = row['destination']
+            weight = float(row['weight'])
+            graph[src].append((dest, weight))  # directed edge
+    return graph
+
+def read_heuristics(file_path):
+    heuristics = {}
+    with open(file_path, 'r') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            heuristics[row['node']] = float(row['heuristic'])
+    return heuristics
+
+def a_star(graph, heuristics, start, goal):
+    open_set = []
+    heapq.heappush(open_set, (heuristics[start], 0, start, [start]))
+    visited = set()
+
+    while open_set:
+        f, g, current, path = heapq.heappop(open_set)
+
+        if current == goal:
+            return path, g
+
+        if current in visited:
+            continue
+        visited.add(current)
+
+        for neighbor, weight in graph[current]:
+            if neighbor not in visited:
+                new_g = g + weight
+                new_f = new_g + heuristics.get(neighbor, float('inf'))
+                heapq.heappush(open_set, (new_f, new_g, neighbor, path + [neighbor]))
+
+    return None, float('inf')
+
+# --- Main ---
+graph = read_graph('graph_with_heuristics.csv')
+heuristics = read_heuristics('heuristics.csv')
+
+start = input("Enter start node: ")
+goal = input("Enter goal node: ")
+
+path, cost = a_star(graph, heuristics, start, goal)
+print("Shortest Path:", path)
+print("Total Cost:", cost)
+
+#A* for Directed Weighted Graph from user input
+
+import heapq
+from collections import defaultdict
+
+def a_star(graph, heuristics, start, goal):
+    open_set = []
+    heapq.heappush(open_set, (heuristics[start], 0, start, [start]))
+    visited = set()
+
+    while open_set:
+        f, g, current, path = heapq.heappop(open_set)
+
+        if current == goal:
+            return path, g
+
+        if current in visited:
+            continue
+        visited.add(current)
+
+        for neighbor, weight in graph[current]:
+            if neighbor not in visited:
+                new_g = g + weight
+                new_f = new_g + heuristics.get(neighbor, float('inf'))
+                heapq.heappush(open_set, (new_f, new_g, neighbor, path + [neighbor]))
+
+    return None, float('inf')
+
+# --- Read from user ---
+graph = defaultdict(list)
+n = int(input("Enter number of edges: "))
+print("Enter edges in format: source destination weight")
+for _ in range(n):
+    u, v, w = input().split()
+    w = float(w)
+    graph[u].append((v, w))
+
+heuristics = {}
+m = int(input("Enter number of nodes with heuristic values: "))
+print("Enter node and heuristic value:")
+for _ in range(m):
+    node, h = input().split()
+    heuristics[node] = float(h)
+
+start = input("Enter start node: ")
+goal = input("Enter goal node: ")
+
+path, cost = a_star(graph, heuristics, start, goal)
+print("Shortest Path:", path)
+print("Total Cost:", cost)
+
+
+#user input
+Enter number of edges: 6
+Enter edges (format: source destination weight):
+A B 1
+A C 4
+B C 2
+B D 5
+C D 1
+D E 3
+
+Enter number of heuristic entries: 5
+Enter heuristic (format: node heuristic):
+A 7
+B 6
+C 2
+D 1
+E 0
+
+Enter start node: A
+Enter goal node: E
+
+#A* for Undirected Weighted Graph from .csv file
+import csv
+import heapq
+from collections import defaultdict
+
+def read_graph(file_path):
+    graph = defaultdict(list)
+    with open(file_path, 'r') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            src = row['source']
+            dest = row['destination']
+            weight = float(row['weight'])
+            graph[src].append((dest, weight))
+            graph[dest].append((src, weight))  # because undirected
+    return graph
+
+def read_heuristics(file_path):
+    heuristics = {}
+    with open(file_path, 'r') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            heuristics[row['node']] = float(row['heuristic'])
+    return heuristics
+
+def a_star(graph, heuristics, start, goal):
+    open_set = []
+    heapq.heappush(open_set, (heuristics[start], 0, start, [start]))
+    visited = set()
+
+    while open_set:
+        f, g, current, path = heapq.heappop(open_set)
+
+        if current == goal:
+            return path, g
+
+        if current in visited:
+            continue
+        visited.add(current)
+
+        for neighbor, weight in graph[current]:
+            if neighbor not in visited:
+                new_g = g + weight
+                new_f = new_g + heuristics.get(neighbor, float('inf'))
+                heapq.heappush(open_set, (new_f, new_g, neighbor, path + [neighbor]))
+
+    return None, float('inf')
+
+# --- Main ---
+graph = read_graph('graph_with_heuristics.csv')
+heuristics = read_heuristics('heuristics.csv')
+
+start = input("Enter start node: ")
+goal = input("Enter goal node: ")
+
+path, cost = a_star(graph, heuristics, start, goal)
+print("Shortest Path:", path)
+print("Total Cost:", cost)
+
+#A* for Undirected Weighted Graph from user input
+
+import heapq
+from collections import defaultdict
+
+def a_star(graph, heuristics, start, goal):
+    open_set = []
+    heapq.heappush(open_set, (heuristics[start], 0, start, [start]))
+    visited = set()
+
+    while open_set:
+        f, g, current, path = heapq.heappop(open_set)
+
+        if current == goal:
+            return path, g
+
+        if current in visited:
+            continue
+        visited.add(current)
+
+        for neighbor, weight in graph[current]:
+            if neighbor not in visited:
+                new_g = g + weight
+                new_f = new_g + heuristics.get(neighbor, float('inf'))
+                heapq.heappush(open_set, (new_f, new_g, neighbor, path + [neighbor]))
+
+    return None, float('inf')
+
+# --- Read from user ---
+graph = defaultdict(list)
+n = int(input("Enter number of edges: "))
+print("Enter edges in format: node1 node2 weight")
+for _ in range(n):
+    u, v, w = input().split()
+    w = float(w)
+    graph[u].append((v, w))
+    graph[v].append((u, w))  # undirected
+
+heuristics = {}
+m = int(input("Enter number of nodes with heuristic values: "))
+print("Enter node and heuristic value:")
+for _ in range(m):
+    node, h = input().split()
+    heuristics[node] = float(h)
+
+start = input("Enter start node: ")
+goal = input("Enter goal node: ")
+
+path, cost = a_star(graph, heuristics, start, goal)
+print("Shortest Path:", path)
+print("Total Cost:", cost)
+
+#user input
+Enter number of edges: 6
+Enter edges (format: source destination weight):
+A B 1
+A C 4
+B C 2
+B D 5
+C D 1
+D E 3
+
+Enter number of heuristic entries: 5
+Enter heuristic (format: node heuristic):
+A 7
+B 6
+C 2
+D 1
+E 0
+
+Enter start node: A
+Enter goal node: E
+
+
