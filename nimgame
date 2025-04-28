@@ -1,0 +1,142 @@
+# Nim Game - Computer Always Wins or Draws
+
+def nim_minimax(piles, is_computer_turn):
+    if all(pile == 0 for pile in piles):
+        return 1 if not is_computer_turn else -1
+
+    if is_computer_turn:
+        best = -float('inf')
+        for i in range(len(piles)):
+            for remove in range(1, piles[i] + 1):
+                new_piles = piles.copy()
+                new_piles[i] -= remove
+                best = max(best, nim_minimax(new_piles, False))
+        return best
+    else:
+        best = float('inf')
+        for i in range(len(piles)):
+            for remove in range(1, piles[i] + 1):
+                new_piles = piles.copy()
+                new_piles[i] -= remove
+                best = min(best, nim_minimax(new_piles, True))
+        return best
+
+def find_best_move(piles):
+    for i in range(len(piles)):
+        for remove in range(1, piles[i] + 1):
+            new_piles = piles.copy()
+            new_piles[i] -= remove
+            if nim_minimax(new_piles, False) == 1:
+                return i, remove
+    # fallback
+    for i in range(len(piles)):
+        if piles[i] > 0:
+            return i, 1
+
+def nim_game():
+    piles = [3, 4, 5]
+    print("Initial Piles:", piles)
+
+    while any(piles):
+        # Computer's move
+        i, remove = find_best_move(piles)
+        print(f"\nComputer removes {remove} from pile {i+1}")
+        piles[i] -= remove
+        print("Piles now:", piles)
+
+        if all(p == 0 for p in piles):
+            print("Computer wins!")
+            break
+
+        # Player's move
+        while True:
+            try:
+                pile_choice = int(input("\nChoose pile (1/2/3): ")) - 1
+                remove_choice = int(input(f"How many to remove from pile {pile_choice+1}? "))
+                if piles[pile_choice] >= remove_choice and remove_choice > 0:
+                    piles[pile_choice] -= remove_choice
+                    print("Piles now:", piles)
+                    break
+                else:
+                    print("Invalid move. Try again.")
+            except (ValueError, IndexError):
+                print("Invalid input. Try again.")
+
+        if all(p == 0 for p in piles):
+            print("You win!")
+            break
+
+if __name__ == "__main__":
+    nim_game()
+
+
+# Nim Game - Computer Always Loses or Draws
+
+def nim_minimax_bad(piles, is_computer_turn):
+    if all(pile == 0 for pile in piles):
+        return 1 if not is_computer_turn else -1
+
+    if is_computer_turn:
+        worst = float('inf')
+        for i in range(len(piles)):
+            for remove in range(1, piles[i] + 1):
+                new_piles = piles.copy()
+                new_piles[i] -= remove
+                worst = min(worst, nim_minimax_bad(new_piles, False))
+        return worst
+    else:
+        best = -float('inf')
+        for i in range(len(piles)):
+            for remove in range(1, piles[i] + 1):
+                new_piles = piles.copy()
+                new_piles[i] -= remove
+                best = max(best, nim_minimax_bad(new_piles, True))
+        return best
+
+def find_worst_move(piles):
+    for i in range(len(piles)):
+        for remove in range(1, piles[i] + 1):
+            new_piles = piles.copy()
+            new_piles[i] -= remove
+            if nim_minimax_bad(new_piles, False) == -1:
+                return i, remove
+    # fallback
+    for i in range(len(piles)):
+        if piles[i] > 0:
+            return i, 1
+
+def nim_game_bad():
+    piles = [3, 4, 5]
+    print("Initial Piles:", piles)
+
+    while any(piles):
+        # Computer's move (bad move)
+        i, remove = find_worst_move(piles)
+        print(f"\nComputer removes {remove} from pile {i+1}")
+        piles[i] -= remove
+        print("Piles now:", piles)
+
+        if all(p == 0 for p in piles):
+            print("Computer wins!")  # unlikely in this version
+            break
+
+        # Player's move
+        while True:
+            try:
+                pile_choice = int(input("\nChoose pile (1/2/3): ")) - 1
+                remove_choice = int(input(f"How many to remove from pile {pile_choice+1}? "))
+                if piles[pile_choice] >= remove_choice and remove_choice > 0:
+                    piles[pile_choice] -= remove_choice
+                    print("Piles now:", piles)
+                    break
+                else:
+                    print("Invalid move. Try again.")
+            except (ValueError, IndexError):
+                print("Invalid input. Try again.")
+
+        if all(p == 0 for p in piles):
+            print("You win!")
+            break
+
+if __name__ == "__main__":
+    nim_game_bad()
