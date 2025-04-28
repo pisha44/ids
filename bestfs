@@ -1,0 +1,240 @@
+#direct unweighted
+import heapq
+
+def best_first_search_directed_unweighted(start, goal, graph, heuristic):
+    visited = set()
+    queue = [(heuristic[start], start)]
+
+    while queue:
+        h, current = heapq.heappop(queue)
+        print(f"Visiting: {current}")
+
+        if current == goal:
+            print(f"Goal {goal} found!")
+            return
+
+        visited.add(current)
+        for neighbor in graph.get(current, []):
+            if neighbor not in visited:
+                heapq.heappush(queue, (heuristic[neighbor], neighbor))
+    print("Goal not reachable.")
+
+# Reading user input
+graph = {}
+n = int(input("Enter number of edges: "))
+print("Enter edges in format: from_node to_node")
+for _ in range(n):
+    u, v = input().split()
+    graph.setdefault(u, []).append(v)
+
+heuristic = {}
+m = int(input("Enter number of nodes with heuristic values: "))
+print("Enter node and its heuristic value:")
+for _ in range(m):
+    node, h = input().split()
+    heuristic[node] = int(h)
+
+start = input("Enter start node: ")
+goal = input("Enter goal node: ")
+
+best_first_search_directed_unweighted(start, goal, graph, heuristic)
+
+#input
+6
+A B
+A C
+B D
+C D
+C E
+E F
+6
+A 5
+B 4
+C 3
+D 2
+E 6
+F 0
+A
+F
+
+#undirected weighted
+import heapq
+
+def best_first_search_undirected_weighted(start, goal, graph, heuristic):
+    visited = set()
+    queue = [(heuristic[start], start)]
+
+    while queue:
+        h, current = heapq.heappop(queue)
+        print(f"Visiting: {current}")
+
+        if current == goal:
+            print(f"Goal {goal} found!")
+            return
+
+        visited.add(current)
+        for neighbor, weight in graph.get(current, []):
+            if neighbor not in visited:
+                heapq.heappush(queue, (heuristic[neighbor], neighbor))
+    print("Goal not reachable.")
+
+# Reading user input
+graph = {}
+n = int(input("Enter number of edges: "))
+print("Enter edges in format: node1 node2 weight")
+for _ in range(n):
+    u, v, w = input().split()
+    w = int(w)
+    graph.setdefault(u, []).append((v, w))
+    graph.setdefault(v, []).append((u, w))  # because undirected
+
+heuristic = {}
+m = int(input("Enter number of nodes with heuristic values: "))
+print("Enter node and its heuristic value:")
+for _ in range(m):
+    node, h = input().split()
+    heuristic[node] = int(h)
+
+start = input("Enter start node: ")
+goal = input("Enter goal node: ")
+
+best_first_search_undirected_weighted(start, goal, graph, heuristic)
+#input
+7
+A B 1
+A C 3
+B D 4
+C D 2
+C E 2
+E F 5
+D F 1
+6
+A 6
+B 5
+C 4
+D 2
+E 3
+F 0
+A
+F
+#undirected unweighted
+import heapq
+
+def best_first_search_undirected_unweighted(start, goal, graph, heuristic):
+    visited = set()
+    queue = [(heuristic[start], start)]
+
+    while queue:
+        h, current = heapq.heappop(queue)
+        print(f"Visiting: {current}")
+
+        if current == goal:
+            print(f"Goal {goal} found!")
+            return
+
+        visited.add(current)
+        for neighbor in graph.get(current, []):
+            if neighbor not in visited:
+                heapq.heappush(queue, (heuristic[neighbor], neighbor))
+    print("Goal not reachable.")
+
+# Reading user input
+graph = {}
+n = int(input("Enter number of edges: "))
+print("Enter edges in format: node1 node2")
+for _ in range(n):
+    u, v = input().split()
+    graph.setdefault(u, []).append(v)
+    graph.setdefault(v, []).append(u)  # because undirected
+
+heuristic = {}
+m = int(input("Enter number of nodes with heuristic values: "))
+print("Enter node and its heuristic value:")
+for _ in range(m):
+    node, h = input().split()
+    heuristic[node] = int(h)
+
+start = input("Enter start node: ")
+goal = input("Enter goal node: ")
+
+best_first_search_undirected_unweighted(start, goal, graph, heuristic)
+#input
+6
+A B
+A C
+B D
+C D
+C E
+E F
+6
+A 5
+B 4
+C 3
+D 2
+E 6
+F 0
+A
+F
+
+
+#directed weighted
+import heapq
+
+def best_first_search_directed_weighted(start, goal, graph, heuristic):
+    visited = set()
+    queue = [(heuristic[start], start)]
+
+    while queue:
+        h, current = heapq.heappop(queue)
+        print(f"Visiting: {current}")
+
+        if current == goal:
+            print(f"Goal {goal} found!")
+            return
+
+        visited.add(current)
+        for neighbor, weight in graph.get(current, []):
+            if neighbor not in visited:
+                heapq.heappush(queue, (heuristic[neighbor], neighbor))
+    print("Goal not reachable.")
+
+# Reading user input
+graph = {}
+n = int(input("Enter number of edges: "))
+print("Enter edges in format: from_node to_node weight")
+for _ in range(n):
+    u, v, w = input().split()
+    w = int(w)
+    graph.setdefault(u, []).append((v, w))
+
+heuristic = {}
+m = int(input("Enter number of nodes with heuristic values: "))
+print("Enter node and its heuristic value:")
+for _ in range(m):
+    node, h = input().split()
+    heuristic[node] = int(h)
+
+start = input("Enter start node: ")
+goal = input("Enter goal node: ")
+
+best_first_search_directed_weighted(start, goal, graph, heuristic)
+
+
+#input
+6
+A B 1
+A C 2
+B D 2
+C D 1
+C E 3
+E F 2
+6
+A 7
+B 6
+C 5
+D 3
+E 4
+F 0
+A
+F
+
