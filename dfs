@@ -35,30 +35,47 @@ def main():
 # Run the main function
 if __name__ == "__main__":
     main()
-#nonrec
+# Function to perform Non-Recursive DFS
+def non_recursive_dfs(graph, start_vertex):
+    visited = set()  # Set to keep track of visited vertices
+    stack = [start_vertex]  # Stack to simulate recursion
 
-import pandas as pd
-from collections import defaultdict
+    while stack:
+        vertex = stack.pop()  # Pop a vertex from the stack
+        
+        if vertex not in visited:
+            print(vertex, end=" ")  # Visit the vertex
+            visited.add(vertex)  # Mark it as visited
+            
+            # Push all unvisited neighbors onto the stack
+            for neighbor in graph.get(vertex, []):
+                if neighbor not in visited:
+                    stack.append(neighbor)
 
-# Read the undirected graph from a CSV file
-df = pd.read_csv('graph_expt1.csv')
- # file should have columns: from, to
+# Function to read the graph from user input
+def read_graph():
+    graph = {}
+    num_edges = int(input("Enter the number of edges: "))
+    
+    print("Enter the edges (in the format 'vertex1 vertex2'):")
+    for _ in range(num_edges):
+        u, v = map(int, input().split())
+        if u not in graph:
+            graph[u] = []
+        if v not in graph:
+            graph[v] = []
+        graph[u].append(v)
+        graph[v].append(u)  # Since it's an undirected graph
+    
+    return graph
 
-# Build the adjacency list
-graph = defaultdict(list)
-for index, row in df.iterrows():
-    graph[row['from']].append(row['to'])
-    graph[row['to']].append(row['from'])  # because it's undirected
-
-# Recursive DFS function
-def dfs_recursive(node, visited):
-    if node not in visited:
-        print(node, end=' ')
-        visited.add(node)
-        for neighbor in graph[node]:
-            dfs_recursive(neighbor, visited)
-
-# Run DFS from a start node
-start_node = input("Enter the start node: ")
-print("DFS Traversal (Recursive):")
-dfs_recursive(start_node, set())
+# Main function to run DFS
+if __name__ == "__main__":
+    # Read the graph from user input
+    graph = read_graph()
+    
+    # Input the starting vertex
+    start_vertex = int(input("Enter the starting vertex for DFS: "))
+    
+    print("Non-recursive DFS traversal starting from vertex", start_vertex)
+    non_recursive_dfs(graph, start_vertex)
