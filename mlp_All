@@ -1,0 +1,219 @@
+# 17. Implement a simple Multi-Layer Perceptron with N binary inputs, two hidden layers and one binary output. Display the final weight matrices, bias
+# values and the number of steps. Note that random values are assigned to weight matrices and bias in each step. 
+
+import numpy as np
+
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+def mlp_train(inputs, target, n_hidden1, n_hidden2, epochs=1000):
+    n_inputs = len(inputs[0])
+    w1 = np.random.randn(n_inputs, n_hidden1)
+    b1 = np.random.randn(n_hidden1)
+    w2 = np.random.randn(n_hidden1, n_hidden2)
+    b2 = np.random.randn(n_hidden2)
+    w3 = np.random.randn(n_hidden2, 1)
+    b3 = np.random.randn(1)
+    
+    for epoch in range(epochs):
+        # Forward pass
+        h1 = sigmoid(np.dot(inputs, w1) + b1)
+        h2 = sigmoid(np.dot(h1, w2) + b2)
+        output = sigmoid(np.dot(h2, w3) + b3)
+        
+        # Simple update (random for simplicity)
+        error = np.mean((output - target) ** 2)
+        if error < 0.01:
+            break
+        w1 += np.random.randn(*w1.shape) * 0.01
+        b1 += np.random.randn(*b1.shape) * 0.01
+        w2 += np.random.randn(*w2.shape) * 0.01
+        b2 += np.random.randn(*b2.shape) * 0.01
+        w3 += np.random.randn(*w3.shape) * 0.01
+        b3 += np.random.randn(*b3.shape) * 0.01
+    
+    return w1, b1, w2, b2, w3, b3, epoch + 1
+
+def main():
+    n = int(input("Enter number of inputs: "))
+    inputs = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])  # Example for 2 inputs
+    target = np.array([[0], [1], [1], [0]])  # XOR-like
+    w1, b1, w2, b2, w3, b3, steps = mlp_train(inputs, target, 4, 4)
+    print("Final Weights W1:\n", w1)
+    print("Final Biases B1:", b1)
+    print("Final Weights W2:\n", w2)
+    print("Final Biases B2:", b2)
+    print("Final Weights W3:\n", w3)
+    print("Final Biases B3:", b3)
+    print("Steps:", steps)
+
+if __name__ == "__main__":
+    main()
+
+    # 18. Implement a simple Multi-Layer Perceptron with 4 binary inputs, one hidden layer and two binary outputs. Display the final weight matrices, bias
+# values and the number of steps. Note that random values are assigned to weight matrices and bias in each step. 
+
+import numpy as np
+
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+def mlp_train(inputs, target, n_hidden, epochs=1000):
+    n_inputs = len(inputs[0])
+    w1 = np.random.randn(n_inputs, n_hidden)
+    b1 = np.random.randn(n_hidden)
+    w2 = np.random.randn(n_hidden, 2)
+    b2 = np.random.randn(2)
+    
+    for epoch in range(epochs):
+        # Forward pass
+        h1 = sigmoid(np.dot(inputs, w1) + b1)
+        output = sigmoid(np.dot(h1, w2) + b2)
+        
+        # Simple update
+        error = np.mean((output - target) ** 2)
+        if error < 0.01:
+            break
+        w1 += np.random.randn(*w1.shape) * 0.01
+        b1 += np.random.randn(*b1.shape) * 0.01
+        w2 += np.random.randn(*w2.shape) * 0.01
+        b2 += np.random.randn(*b2.shape) * 0.01
+    
+    return w1, b1, w2, b2, epoch + 1
+
+def main():
+    inputs = np.array([[0, 0, 0, 0], [0, 0, 0, 1], [0, 0, 1, 0], [0, 0, 1, 1]]) 
+    target = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+    w1, b1, w2, b2, steps = mlp_train(inputs, target, 4)
+    print("Final Weights W1:\n", w1)
+    print("Final Biases B1:", b1)
+    print("Final Weights W2:\n", w2)
+    print("Final Biases B2:", b2)
+    print("Steps:", steps)
+
+if __name__ == "__main__":
+    main()
+
+    # 19. Implement a simple Multi-Layer Perceptron with N binary inputs, two hidden layers and one output. Use backpropagation and Sigmoid function
+# as activation function
+
+import numpy as np
+
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+def sigmoid_deriv(x):
+    return x * (1 - x)
+
+def mlp_train(inputs, target, n_hidden1, n_hidden2, epochs=1000, lr=0.1):
+    n_inputs = len(inputs[0])
+    w1 = np.random.randn(n_inputs, n_hidden1)
+    b1 = np.random.randn(n_hidden1)
+    w2 = np.random.randn(n_hidden1, n_hidden2)
+    b2 = np.random.randn(n_hidden2)
+    w3 = np.random.randn(n_hidden2, 1)
+    b3 = np.random.randn(1)
+    
+    for _ in range(epochs):
+        # Forward
+        z1 = np.dot(inputs, w1) + b1
+        h1 = sigmoid(z1)
+        z2 = np.dot(h1, w2) + b2
+        h2 = sigmoid(z2)
+        z3 = np.dot(h2, w3) + b3
+        output = sigmoid(z3)
+        
+        # Backward
+        error = output - target
+        delta3 = error * sigmoid_deriv(output)
+        error_h2 = np.dot(delta3, w3.T)
+        delta2 = error_h2 * sigmoid_deriv(h2)
+        error_h1 = np.dot(delta2, w2.T)
+        delta1 = error_h1 * sigmoid_deriv(h1)
+        
+        # Update
+        w3 -= lr * np.dot(h2.T, delta3)
+        b3 -= lr * np.sum(delta3, axis=0)
+        w2 -= lr * np.dot(h1.T, delta2)
+        b2 -= lr * np.sum(delta2, axis=0)
+        w1 -= lr * np.dot(inputs.T, delta1)
+        b1 -= lr * np.sum(delta1, axis=0)
+    
+    return w1, b1, w2, b2, w3, b3
+
+def main():
+    n = int(input("Enter number of inputs: "))
+    inputs = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])  # Example for 2 inputs
+    target = np.array([[0], [1], [1], [0]])  # XOR-like
+    w1, b1, w2, b2, w3, b3 = mlp_train(inputs, target, 4, 4)
+    print("Final Weights W1:\n", w1)
+    print("Final Biases B1:", b1)
+    print("Final Weights W2:\n", w2)
+    print("Final Biases B2:", b2)
+    print("Final Weights W3:\n", w3)
+    print("Final Biases B3:", b3)
+
+if __name__ == "__main__":
+    main()
+
+    # 20. Implement a simple Multi-Layer Perceptron with N binary inputs, two hidden layers and one output. Use backpropagation and ReLU function as
+# activation function. 
+
+import numpy as np
+
+def relu(x):
+    return np.maximum(0, x)
+
+def relu_deriv(x):
+    return np.where(x > 0, 1, 0)
+
+def mlp_train(inputs, target, n_hidden1, n_hidden2, epochs=1000, lr=0.01):
+    n_inputs = len(inputs[0])
+    w1 = np.random.randn(n_inputs, n_hidden1)
+    b1 = np.random.randn(n_hidden1)
+    w2 = np.random.randn(n_hidden1, n_hidden2)
+    b2 = np.random.randn(n_hidden2)
+    w3 = np.random.randn(n_hidden2, 1)
+    b3 = np.random.randn(1)
+    
+    for _ in range(epochs):
+        # Forward
+        z1 = np.dot(inputs, w1) + b1
+        h1 = relu(z1)
+        z2 = np.dot(h1, w2) + b2
+        h2 = relu(z2)
+        z3 = np.dot(h2, w3) + b3
+        output = relu(z3)
+        
+        # Backward
+        error = output - target
+        delta3 = error * relu_deriv(output)
+        error_h2 = np.dot(delta3, w3.T)
+        delta2 = error_h2 * relu_deriv(h2)
+        error_h1 = np.dot(delta2, w2.T)
+        delta1 = error_h1 * relu_deriv(h1)
+        
+        # Update
+        w3 -= lr * np.dot(h2.T, delta3)
+        b3 -= lr * np.sum(delta3, axis=0)
+        w2 -= lr * np.dot(h1.T, delta2)
+        b2 -= lr * np.sum(delta2, axis=0)
+        w1 -= lr * np.dot(inputs.T, delta1)
+        b1 -= lr * np.sum(delta1, axis=0)
+    
+    return w1, b1, w2, b2, w3, b3
+
+def main():
+    n = int(input("Enter number of inputs: "))
+    inputs = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])  
+    target = np.array([[0], [1], [1], [0]]) 
+    w1, b1, w2, b2, w3, b3 = mlp_train(inputs, target, 4, 4)
+    print("Final Weights W1:\n", w1)
+    print("Final Biases B1:", b1)
+    print("Final Weights W2:\n", w2)
+    print("Final Biases B2:", b2)
+    print("Final Weights W3:\n", w3)
+    print("Final Biases B3:", b3)
+
+if __name__ == "__main__":
+    main()
